@@ -1,15 +1,23 @@
 import os
 import PyPDF2
 from PyPDF2 import PdfReader , PdfWriter
+import re
+
 
 current_directory = os.getcwd()
-output_directory = os.path.join(current_directory, "output")
+output_directory = ''
 
 
 def find_pdf_file():
+    global output_directory
+    
     pdf_files = [file for file in os.listdir(current_directory) if file.endswith(".pdf")]
     
     if pdf_files:
+        filename, file_ext = os.path.splitext(pdf_files[0])
+
+        directoryName = re.sub(r'[._-]', ' ', filename)  # Output: '/path/to/file'
+        output_directory = os.path.join(current_directory, directoryName)
         pdf_file_path = os.path.join(current_directory, pdf_files[0])
         return pdf_file_path
     else:
