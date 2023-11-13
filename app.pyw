@@ -12,6 +12,8 @@ import tkinter.font as fnt
 
 from ttkthemes import ThemedStyle
 
+from tkinterdnd2 import DND_FILES, TkinterDnD
+
 import os
 
 import natsort
@@ -79,7 +81,7 @@ class PlaceholderEntry(tk.Entry):
         return content
 
 # create root window
-root = tk.Tk()
+root = TkinterDnD.Tk()
 
 
 #root = ThemedTk(theme="awdark")
@@ -807,10 +809,40 @@ def openfile():
     
 
 
+def sanitizeString(str) :
+    for ch in ['{','}']:
+        if ch in str:
+            str = str.replace(ch,"")
+    return str
+
+
+def dropDirectory(e) :
+    global result
+    global path
+    
+    try : 
+        path = sanitizeString(e.data)
+        #print(path)
+        result = []
+        fetchSavedHistory()
+        fetchLovedHistory()
+        fetchAllFilesFromPath()
+        #return filedialog.askopenfilename()
+    except : 
+        pass
+    
+    #messagebox.showinfo(f"information",f"{e.data}")
+    
+
+
 buttonFont = fnt.Font(family='ubuntu', size=36, weight='bold')
 
 style.configure( 'my.TButton', font=font_properties , anchor='c' )
 label = ttk.Label(topFrame , text='select folder to load directories ...' , font=font_properties )
+
+label.drop_target_register(DND_FILES)
+label.dnd_bind('<<Drop>>', dropDirectory )
+
 button = ttk.Button(topFrame , text = 'browse' , command=openfile , style='my.TButton'  )
 
 
