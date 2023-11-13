@@ -1,4 +1,5 @@
 import glob
+import glob
 
 import tkinter
 import tkinter as tk
@@ -93,7 +94,7 @@ pady = -5
 
 #titlebar_height = root.winfo_rooty() - root.winfo_y()
 #root.geometry( '{0}x{1}+{2}+{3}'.format( str( root.winfo_screenwidth() ) , str( root.winfo_screenheight()  - titlebar_height * 2 ) , padx , pady  ) )
-root.state('zoomed')
+#root.state('zoomed')
 
 #print("titlebar_height : " , titlebar_height) 
 
@@ -450,8 +451,15 @@ def OnDoubleClick(event):
         #print(path)
         
         
-        subprocess.Popen(f"SumatraPDF \"{path}\"")
+        subprocess.Popen(f"SumatraPDF -view \"single page\" -zoom \"fit page\" -bg-color #1c1a1b -set-color-range #242222 #cfcccc  \"{path}\"")
         
+        """
+        #bdbdbd
+        #b5b5b5
+        #cfcccc
+        #242222 
+        #bdbdbd 
+        """
         """
         if player_index == 0 :
             subprocess.Popen(f"vlc \"{path}\"")
@@ -599,7 +607,8 @@ def add_data() :
         if reversePlaylist == False :
             if os.path.isfile(result[counter]) :
                 if numbering == True :
-                    eachTextString = precedence + str(counter+1) + " - " + thePath[1:]
+                    eachTextString = precedence + str(counter+1) + thePath[-4:]
+                    # + " - " + thePath[1:]
                 else :
                     eachTextString = thePath[1:]
                 tree.insert('', tk.END, text=eachTextString.replace( "\\" , "  \\  " ) , iid=counter, open=False , tags = counter )
@@ -607,7 +616,8 @@ def add_data() :
         else : 
             if os.path.isfile(result[length-counter-1]) :
                 if numbering == True :
-                    eachTextString = precedence + str(length-counter-1+1) + " - " + thePath[1:]
+                    eachTextString = precedence + str(length-counter-1+1) + thePath[-4:]
+                    # + " - " + thePath[1:]
                 else :
                     eachTextString = thePath[1:]
                 tree.insert('', tk.END, text=eachTextString.replace( "\\" , "  \\  " ) , iid=length-counter-1, open=False , tags = length-counter-1 )
@@ -684,6 +694,7 @@ def fetchAllFilesFromPath(calculateVideoDuration = True) :
     result = glob.glob(path + '/**/*.pdf', recursive=True)
     
     result = natsort.natsorted(result)
+    
     """
     if calculateVideoDuration == True : 
         video_duration_array = []
